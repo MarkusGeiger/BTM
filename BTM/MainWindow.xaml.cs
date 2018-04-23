@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +20,22 @@ namespace BTM
   /// <summary>
   /// Interaction logic for MainWindow.xaml
   /// </summary>
-  public partial class MainWindow : Window
+  public partial class MainWindow : MetroWindow
   {
     public MainWindow()
     {
       InitializeComponent();
+      DataContext = new MainViewModel(DialogCoordinator.Instance);
     }
+
+    
+
+
+    private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+      ((MainViewModel)DataContext).Initialize();
+
+    }
+  
   }
 }

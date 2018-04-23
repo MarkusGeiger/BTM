@@ -1,12 +1,44 @@
-﻿<Window x:Class="BTM.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BTM"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+﻿<mah:MetroWindow x:Class="BTM.MainWindow"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                 Loaded="MetroWindow_Loaded"
+                 Dialog:DialogParticipation.Register="{Binding}"
+                 xmlns:local="clr-namespace:BTM"
+                 xmlns:common="clr-namespace:BTM.Common;assembly=BTM.Common"
+                 mc:Ignorable="d"
+                 Title="BuildTaskManager" 
+                 Height="450" 
+                 Width="800">
+  <!--<mah:MetroWindow.DataContext>
+    <local:MainViewModel />
+  </mah:MetroWindow.DataContext>-->
     <Grid>
-        
-    </Grid>
-</Window>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="38"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Button Grid.Row="0"
+              Content="Compose"
+              Command="{Binding ComposeCommand}"/>
+
+    <ListBox Grid.Row="1" 
+             ItemsSource="{Binding ExtensionList}">
+      <ListBox.ItemTemplate>
+        <DataTemplate DataType="{x:Type common:ITaskData}">
+          <Grid >
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition/>
+              <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+            <TextBlock Grid.Column="1" Text="{Binding Version}"/>
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</mah:MetroWindow>
