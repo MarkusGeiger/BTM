@@ -1,6 +1,6 @@
 ﻿namespace BTM.Common
 {
-  public interface ITaskData
+  public interface ITaskMetaData
   {
     string Name { get; }
     string Version { get; }

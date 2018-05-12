@@ -5,8 +5,6 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BTM.Extensibility
 {
@@ -18,6 +16,7 @@ namespace BTM.Extensibility
 
     private ExtensionManager()
     {
+      ComposeParts();
     }
 
     public static ExtensionManager Instance
@@ -28,14 +27,13 @@ namespace BTM.Extensibility
       }
     }
 
-    public IEnumerable<ITaskData> AvailableParts { get; private set; }
+    public IEnumerable<Lazy<ITask, ITaskMetaData>> AvailableParts { get; private set; }
 
     [ImportMany]
-    private IEnumerable<Lazy<ITask, ITaskData>> taskList;
+    private IEnumerable<Lazy<ITask, ITaskMetaData>> taskList;
 
     public void ComposeParts()
     {
-      System.Threading.Thread.Sleep(5000);
       //An aggregate catalog that combines multiple catalogs  
       var catalog = new AggregateCatalog();
       //Adds all the parts found in the same assembly as the Program class  
@@ -49,7 +47,7 @@ namespace BTM.Extensibility
       {
         _container.ComposeParts(this);
 
-        AvailableParts = taskList.Select(lazyPart => lazyPart.Metadata);
+        AvailableParts = taskList;
       }
       catch (CompositionException compositionException)
       {

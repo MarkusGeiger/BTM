@@ -9,36 +9,83 @@
                  Dialog:DialogParticipation.Register="{Binding}"
                  xmlns:local="clr-namespace:BTM"
                  xmlns:common="clr-namespace:BTM.Common;assembly=BTM.Common"
+                 xmlns:extensibility="clr-namespace:BTM.Extensibility;assembly=BTM.Extensibility"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:converter="clr-namespace:BTM.Converter"
+                 xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                 xmlns:selector="clr-namespace:BTM.Selector"
                  mc:Ignorable="d"
                  Title="BuildTaskManager" 
                  Height="450" 
                  Width="800">
+  <mah:MetroWindow.Resources>
+    
+  </mah:MetroWindow.Resources>
   <!--<mah:MetroWindow.DataContext>
     <local:MainViewModel />
   </mah:MetroWindow.DataContext>-->
-    <Grid>
+  <mah:MetroWindow.Flyouts>
+    <mah:FlyoutsControl>
+      <mah:Flyout IsOpen="{Binding IsChecked,ElementName=FlyoutOpenCloseButton}" Header="AddOns" Position="Right" Width="200">
+        <ListBox Grid.Row="1" 
+             Grid.Column="1"
+             ItemsSource="{Binding ExtensionList}">
+          <ListBox.ItemTemplate>
+            <DataTemplate DataType="{x:Type common:ITaskMetaData}">
+              <Grid >
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="2*"/>
+                  <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+                <TextBlock Grid.Column="1" Text="{Binding Version}"/>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </mah:Flyout>
+    </mah:FlyoutsControl>
+  </mah:MetroWindow.Flyouts>
+  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="38"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
+      <RowDefinition Height="38"/>
     </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="3*"/>
+      <ColumnDefinition Width="38"/>
+    </Grid.ColumnDefinitions>
     <Button Grid.Row="0"
               Content="Compose"
               Command="{Binding ComposeCommand}"/>
 
-    <ListBox Grid.Row="1" 
-             ItemsSource="{Binding ExtensionList}">
-      <ListBox.ItemTemplate>
-        <DataTemplate DataType="{x:Type common:ITaskData}">
-          <Grid >
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition/>
-              <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="{Binding Name}"/>
-            <TextBlock Grid.Column="1" Text="{Binding Version}"/>
-          </Grid>
-        </DataTemplate>
-      </ListBox.ItemTemplate>
-    </ListBox>
+    <ToggleButton x:Name="FlyoutOpenCloseButton" 
+                  Width="38"
+                  Height="38"
+                  Grid.Column="1"
+                  Style="{DynamicResource MetroCircleToggleButtonStyle}">
+      <Grid>
+        <iconPacks:PackIconFontAwesome Kind="InfoSolid" />
+      </Grid>
+    </ToggleButton>
+
+    <local:TaskItemsControl Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            ItemsSource="{Binding TaskItems}"/>
+
+    <Button Grid.Row="3"
+              Content="Run"
+              Command="{Binding RunCommand}"/>
+
+    <Button Grid.Row="4"
+              Content="Save to file"
+              Command="{Binding SaveCommand}"/>
+
+
+
+
+
   </Grid>
 </mah:MetroWindow>
