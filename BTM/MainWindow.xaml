@@ -52,14 +52,22 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="38"/>
+      <RowDefinition Height="38"/>
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="3*"/>
       <ColumnDefinition Width="38"/>
     </Grid.ColumnDefinitions>
     <Button Grid.Row="0"
-              Content="Compose"
-              Command="{Binding ComposeCommand}"/>
+            Width="38"
+            Height="38"
+            HorizontalAlignment="Left"
+            Command="{Binding ComposeCommand}"
+            Style="{DynamicResource MetroCircleButtonStyle}">
+      <Grid>
+        <iconPacks:PackIconMaterial Kind="Refresh" />
+      </Grid>
+    </Button>
 
     <ToggleButton x:Name="FlyoutOpenCloseButton" 
                   Width="38"
@@ -67,7 +75,7 @@
                   Grid.Column="1"
                   Style="{DynamicResource MetroCircleToggleButtonStyle}">
       <Grid>
-        <iconPacks:PackIconFontAwesome Kind="InfoSolid" />
+        <iconPacks:PackIconMaterial Kind="InformationVariant" />
       </Grid>
     </ToggleButton>
 
@@ -76,12 +84,26 @@
                             ItemsSource="{Binding TaskItems}"/>
 
     <Button Grid.Row="3"
-              Content="Run"
-              Command="{Binding RunCommand}"/>
+            Width="38"
+            Height="38"
+            HorizontalAlignment="Left"
+              Command="{Binding RunCommand}"
+            Style="{DynamicResource MetroCircleButtonStyle}">
+      <Grid>
+        <iconPacks:PackIconMaterial Kind="Play" />
+      </Grid>
+    </Button>
 
     <Button Grid.Row="4"
-              Content="Save to file"
-              Command="{Binding SaveCommand}"/>
+            Width="38"
+            Height="38"
+            HorizontalAlignment="Left"
+              Command="{Binding SaveCommand}"
+            Style="{DynamicResource MetroCircleButtonStyle}">
+      <Grid>
+        <iconPacks:PackIconMaterial Kind="ContentSave" />
+      </Grid>
+    </Button>
 
 
 

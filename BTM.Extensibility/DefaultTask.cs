@@ -19,6 +19,18 @@ namespace BTM.Extensibility
 
     public DefaultTask()
     {
+      if (ExtensionManager.Instance.AvailableParts == null)
+      {
+        ExtensionManager.Instance.CompositionCompletedEvent += GetTaskList;
+      }
+      else
+      {
+        GetTaskList();
+      }
+    }
+
+    private void GetTaskList()
+    {
       _TaskList = ExtensionManager.Instance.AvailableParts.Select(lazy => lazy.Value);
     }
 
@@ -43,6 +55,8 @@ namespace BTM.Extensibility
     {
       return new DefaultTask();
     }
+
+    public bool IsTaskListAvailable => AvailableTaskList?.Any() ?? false;
 
     public IEnumerable<string> GetParameterList()
     {

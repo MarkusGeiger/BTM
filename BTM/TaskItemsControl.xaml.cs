@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using BTM.Extensibility;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using BTM.Extensions;
 
 namespace BTM
 {
@@ -73,6 +74,7 @@ namespace BTM
           TaskItemsSource.Insert(index + 1, defaultTask);
         }
       }
+      TaskListItemsControl.ScrollIntoView(defaultTask);
     }
 
     public ICommand DeleteCommand
@@ -82,7 +84,7 @@ namespace BTM
 
     private Func<ITask, bool> OnDeleteCanExecute()
     {
-      return task => (task is DefaultTask && !TaskItemsSource.Skip(1).Any()) || !TaskItemsSource.Any(item => item is DefaultTask);
+      return task => (task is DefaultTask && TaskItemsSource.Skip(1).Any()) || !TaskItemsSource.Any(item => item is DefaultTask);
     }
 
 
@@ -156,7 +158,7 @@ namespace BTM
           case NotifyCollectionChangedAction.Add:
             foreach (var item in e.NewItems)
             {
-              TaskItemsSource.Add((ITask)item);
+              if(!(TaskItemsSource?.Contains(item) ?? false)) TaskItemsSource.Add((ITask)item);
             }
             break;
           case NotifyCollectionChangedAction.Remove:

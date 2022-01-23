@@ -12,21 +12,14 @@ namespace BTM.TextFileAccess
 {
   [Export(typeof(ITask))]
   [ExportMetadata("Name", "TextFileTask")]
-  [ExportMetadata("Version", "1.0.0.2")]
+  [ExportMetadata("Version", "1.0.1.2")]
   [JsonConverter(typeof(TaskJsonConverter))]
-  public class TextFileTask : BindableBase, ITask
+  public class TextFileTask : TaskBase, ITask
   {
-    public ITask Previous { get; set; }
-    public ITask Next { get; set; }
-    public IEnumerable<ITaskProperty> Parameters { get; set; }
-    public IEnumerable<object> InputValues { get; set; }
-    public IEnumerable<object> OutputValues { get; set; }
+    public override string Name => GetType().Name;
 
-    public string Name => GetType().Name;
+    public override Version Version => GetType().Assembly.GetName().Version;
 
-    public Version Version => GetType().Assembly.GetName().Version;
-
-    public bool IsFirst { get; set; }
 
     private void InitializeParameters()
     {
@@ -40,26 +33,13 @@ namespace BTM.TextFileAccess
     {
       InitializeParameters();
     }
-
-    public IEnumerable<string> GetParameterList()
-    {
-      return Parameters != null ? Parameters.Select(param => param.Name) : Enumerable.Empty<string>();
-    }
-
-    public void SetParameter(string name, string value)
-    {
-      if (Parameters != null && Parameters.Any(param => param.Name == name))
-      {
-        Parameters.First(param => param.Name == name).Value = value;
-      }
-    }
-
-    public ITask GetInstance()
+    
+    public override ITask GetInstance()
     {
       return new TextFileTask();
     }
 
-    public void Run()
+    protected override void DoWork()
     {
       throw new NotImplementedException();
     }

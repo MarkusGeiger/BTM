@@ -54,6 +54,7 @@
                       Grid.ColumnSpan="2"
                       mah:TextBoxHelper.UseFloatingWatermark="True"
                       mah:TextBoxHelper.Watermark="Please select a task type..."
+                      IsEnabled="{Binding IsTaskListAvailable}"
                       ItemsSource="{Binding AvailableTaskList}"
                       SelectedItem="{Binding SelectedTask}"/>
             <TextBlock Grid.Row="1" 
@@ -169,7 +170,8 @@
                 VerticalScrollBarVisibility="Disabled"
                 PanningMode="HorizontalOnly"
                 CanContentScroll="False">
-    <ItemsControl Height="Auto"
+    <ItemsControl x:Name="TaskListItemsControl" 
+                  Height="Auto"
                   AlternationCount="9999"
                   ItemTemplateSelector="{StaticResource TaskTemplateSelector}"
                   ItemsSource="{Binding TaskItemsSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:TaskItemsControl}}}">

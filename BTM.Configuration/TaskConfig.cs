@@ -3,13 +3,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BTM.Configuration
 {
@@ -28,12 +24,29 @@ namespace BTM.Configuration
     {
       if (File.Exists(FILEPATH))
       {
-        TaskCollection = JsonConvert.DeserializeObject<ObservableCollection<ITask>>(File.ReadAllText(FILEPATH));
+        try
+        {
+          TaskCollection = JsonConvert.DeserializeObject<ObservableCollection<ITask>>(File.ReadAllText(FILEPATH));
+        }
+        catch (JsonSerializationException jsonSerializationException)
+        {
+          throw new ConfigurationException($"Error reading AddOn config file {FILEPATH}", jsonSerializationException);
+        }
+        finally
+        {
+          if (TaskCollection == null)
+          {
+            File.Delete(FILEPATH);
+            TaskCollection = new ObservableCollection<ITask>();
+            TaskCollection.CollectionChanged += OnTaskCollectionChanged;
+          }
+        }
       }
       else
       {
         TaskCollection = new ObservableCollection<ITask>();
       }
+
       TaskCollection.CollectionChanged += OnTaskCollectionChanged;
     }
 
@@ -41,7 +54,7 @@ namespace BTM.Configuration
     {
       if(sender is ObservableCollection<ITask> taskCollection)
       {
-        File.WriteAllText(FILEPATH, JsonConvert.SerializeObject(taskCollection, Formatting.Indented));
+        File.WriteAllText(FILEPATH, JsonConvert.SerializeObject(taskCollection));
       }
     }
 

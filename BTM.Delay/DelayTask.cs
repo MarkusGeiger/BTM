@@ -1,21 +1,16 @@
 ﻿using BTM.Common;
 using BTM.Configuration;
 using Newtonsoft.Json;
-using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BTM.Delay
 {
   [Export(typeof(ITask))]
   [ExportMetadata("Name", "DelayTask")]
-  [ExportMetadata("Version", "1.0.0.0")]
+  [ExportMetadata("Version", "1.0.0.1")]
   [JsonConverter(typeof(TaskJsonConverter))]
   public class DelayTask : TaskBase, ITask
   {

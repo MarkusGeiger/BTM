@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultTask.cs" />
+    <Compile Include="ExtensibilityException.cs" />
     <Compile Include="ExtensionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

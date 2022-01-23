@@ -16,7 +16,13 @@ namespace BTM.Extensibility
 
     private ExtensionManager()
     {
-      ComposeParts();
+    }
+
+    public event Action CompositionCompletedEvent;
+
+    private void RaiseCompositionCompletedEvent()
+    {
+      CompositionCompletedEvent?.Invoke();
     }
 
     public static ExtensionManager Instance
@@ -27,17 +33,35 @@ namespace BTM.Extensibility
       }
     }
 
-    public IEnumerable<Lazy<ITask, ITaskMetaData>> AvailableParts { get; private set; }
+    public IEnumerable<Lazy<ITask, ITaskMetaData>> AvailableParts
+    {
+      get => _availableParts;
+      private set
+      {
+        _availableParts = value;
+        if(_availableParts != null) RaiseCompositionCompletedEvent();
+      }
+    }
 
     [ImportMany]
     private IEnumerable<Lazy<ITask, ITaskMetaData>> taskList;
+    private IEnumerable<Lazy<ITask, ITaskMetaData>> _availableParts;
 
     public void ComposeParts()
     {
       //An aggregate catalog that combines multiple catalogs  
       var catalog = new AggregateCatalog();
       //Adds all the parts found in the same assembly as the Program class  
-      catalog.Catalogs.Add(new DirectoryCatalog(Path.Combine(Environment.CurrentDirectory, ADD_ON_DIRECTORY)));
+      var addOnStorage = Path.Combine(Environment.CurrentDirectory, ADD_ON_DIRECTORY);
+      try
+      {
+        catalog.Catalogs.Add(new DirectoryCatalog(addOnStorage));
+      }
+      catch (DirectoryNotFoundException directoryNotFoundException)
+      {
+        Console.WriteLine(directoryNotFoundException.ToString());
+        throw new ExtensibilityException($"AddOn storage directory {addOnStorage} not found.", directoryNotFoundException);
+      }
 
       //Create the CompositionContainer with the parts in the catalog  
       _container = new CompositionContainer(catalog);
@@ -46,12 +70,19 @@ namespace BTM.Extensibility
       try
       {
         _container.ComposeParts(this);
-
-        AvailableParts = taskList;
+        if (taskList != null && taskList.Any())
+        {
+          AvailableParts = taskList;
+        }
+        else
+        {
+          throw new ExtensibilityException($"No AddOns found in AddOn storage directory {addOnStorage}.");
+        }
       }
       catch (CompositionException compositionException)
       {
         Console.WriteLine(compositionException.ToString());
+        throw new ExtensibilityException($"No AddOns found in AddOn storage directory {addOnStorage}.", compositionException);
       }
     }
   }

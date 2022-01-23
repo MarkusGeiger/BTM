@@ -29,7 +29,7 @@ namespace BTM
 
     private void OnRun()
     {
-      throw new NotImplementedException();
+      if(TaskItems?.Any() ?? false) TaskItems?.First()?.Run();
     }
 
     private async void OnCompose()
@@ -40,13 +40,22 @@ namespace BTM
 
       await Task.Factory.StartNew(() =>
       {
-        ExtensionManager.Instance.ComposeParts();
+        try
+        {
+          ExtensionManager.Instance.ComposeParts();
+        }
+        catch (ExtensibilityException exc)
+        {
+          controller.CloseAsync();
+          dialogCoordinator.ShowMessageAsync(this, "Application composition error.", exc.Message);
+          return;
+        }
       }).ContinueWith(
         task =>
         {
           Application.Current.Dispatcher.Invoke(() =>
           {
-            ExtensionList = ExtensionManager.Instance.AvailableParts.Select(lazy => lazy.Metadata);
+            ExtensionList = ExtensionManager.Instance.AvailableParts?.Select(lazy => lazy.Metadata);
             TaskItems = TaskConfig.Instance.TaskCollection;
             // Close...
             controller.CloseAsync();

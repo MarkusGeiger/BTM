@@ -10,38 +10,20 @@ namespace BTM.GIT
 {
   [Export(typeof(ITask))]
   [ExportMetadata("Name", "GitAccessTask")]
-  [ExportMetadata("Version", "1.0.0.1")]
+  [ExportMetadata("Version", "1.0.1.1")]
   [JsonConverter(typeof(TaskJsonConverter))]
-  public class GitAccessTask : BindableBase, ITask
+  public class GitAccessTask : TaskBase, ITask
   {
-    public ITask Previous { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public ITask Next { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public IEnumerable<object> InputValues { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public IEnumerable<object> OutputValues { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public IEnumerable<ITaskProperty> Parameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override string Name => GetType().Name;
 
-    public string Name => GetType().Name;
+    public override Version Version => GetType().Assembly.GetName().Version;
 
-    public Version Version => GetType().Assembly.GetName().Version;
-
-    public bool IsFirst { get; set; }
-
-    public ITask GetInstance()
+    public override ITask GetInstance()
     {
       return new GitAccessTask();
     }
 
-    public IEnumerable<string> GetParameterList()
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Run()
-    {
-      throw new NotImplementedException();
-    }
-
-    public void SetParameter(string name, string value)
+    protected override void DoWork()
     {
       throw new NotImplementedException();
     }
